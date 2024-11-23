@@ -7,13 +7,19 @@ from .forms import OpinionForm
 from .models import Opinion
 
 
+def random_opinion():
+    quntity = Opinion.query.count()
+    if quntity:
+        offset_value = randrange(quntity)
+        opinion = Opinion.query.offset(offset_value).first()
+        return opinion
+
 @app.route('/')
 def index_view():
+    opinion = random_opinion()
     quntity = Opinion.query.count()
     if not quntity:
         abort(500)
-    offset_value = randrange(quntity)
-    opinion = Opinion.query.offset(offset_value).first()
     return render_template('opinion.html', opinion=opinion)
 
 @app.route('/add', methods=['GET', 'POST'])
